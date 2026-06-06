@@ -1,7 +1,7 @@
 // src/App.tsx
 
 import { useState } from 'react';
-import { mockRecordings } from './data/mockRecordings';
+import { searchRecordings } from './services/searchService';
 import { BlindRecordingCard } from './components/BlindRecordingCard';
 
 export default function App() {
@@ -9,11 +9,7 @@ export default function App() {
   const [searched, setSearched] = useState(false);
   const [revealedIds, setRevealedIds] = useState<string[]>([]);
 
-  const results = searched
-    ? mockRecordings.filter((recording) =>
-        recording.ariaTitle.toLowerCase().includes(query.toLowerCase())
-      )
-    : [];
+  const results = searched ? searchRecordings(query) : [];
 
   function reveal(id: string) {
     setRevealedIds((current) =>
