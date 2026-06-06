@@ -39,7 +39,9 @@ export function SearchPage() {
           onChange={(event) => setQuery(event.target.value)}
         />
 
-        <button onClick={handleSearch}>Search</button>
+        <button onClick={handleSearch} disabled={isLoading}>
+        {isLoading ? 'Searching...' : 'Search'}
+        </button>
       </div>
 
       {results.map((recording, index) => (
