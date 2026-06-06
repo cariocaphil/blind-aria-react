@@ -1,5 +1,8 @@
+// src/App.tsx
+
 import { useState } from 'react';
 import { mockRecordings } from './data/mockRecordings';
+import { BlindRecordingCard } from './components/BlindRecordingCard';
 
 export default function App() {
   const [query, setQuery] = useState('Casta Diva');
@@ -13,41 +16,33 @@ export default function App() {
     : [];
 
   function reveal(id: string) {
-    setRevealedIds((current) => [...current, id]);
+    setRevealedIds((current) =>
+      current.includes(id) ? current : [...current, id]
+    );
   }
 
   return (
     <main>
       <h1>Blind Aria</h1>
 
-      <input value={query} onChange={(e) => setQuery(e.target.value)} />
-      <button onClick={() => setSearched(true)}>Search</button>
+      <div>
+        <input
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+        />
 
-      {results.map((recording, index) => {
-        const isRevealed = revealedIds.includes(recording.id);
+        <button onClick={() => setSearched(true)}>Search</button>
+      </div>
 
-        return (
-          <section key={recording.id}>
-            <h2>Version {index + 1}</h2>
-
-            <iframe
-              width="560"
-              height="315"
-              src={`https://www.youtube.com/embed/${recording.videoId}`}
-              allow="autoplay; encrypted-media; picture-in-picture"
-              allowFullScreen
-            />
-
-            {isRevealed ? (
-              <p>
-                {recording.performer}, {recording.year}
-              </p>
-            ) : (
-              <button onClick={() => reveal(recording.id)}>Reveal</button>
-            )}
-          </section>
-        );
-      })}
+      {results.map((recording, index) => (
+        <BlindRecordingCard
+          key={recording.id}
+          recording={recording}
+          versionNumber={index + 1}
+          isRevealed={revealedIds.includes(recording.id)}
+          onReveal={reveal}
+        />
+      ))}
     </main>
   );
 }
