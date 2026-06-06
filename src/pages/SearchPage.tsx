@@ -10,6 +10,7 @@ export function SearchPage() {
   const [results, setResults] = useState<Recording[]>([]);
   const [revealedIds, setRevealedIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [activeRecordingId, setActiveRecordingId] = useState<string | null>(null);
 
   async function handleSearch() {
     setIsLoading(true);
@@ -46,12 +47,15 @@ export function SearchPage() {
 
       {results.map((recording, index) => (
         <BlindRecordingCard
-          key={recording.id}
-          recording={recording}
-          versionNumber={index + 1}
-          isRevealed={revealedIds.includes(recording.id)}
-          onReveal={reveal}
-        />
+            key={recording.id}
+            recording={recording}
+            versionNumber={index + 1}
+            isRevealed={revealedIds.includes(recording.id)}
+            isActive={activeRecordingId === recording.id}
+            onPlay={() => setActiveRecordingId(recording.id)}
+            onPause={() => setActiveRecordingId(null)}
+            onReveal={reveal}
+/>
       ))}
     </main>
   );

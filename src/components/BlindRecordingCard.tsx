@@ -5,6 +5,9 @@ type BlindRecordingCardProps = {
   recording: Recording;
   versionNumber: number;
   isRevealed: boolean;
+  isActive: boolean;
+  onPlay: () => void;
+  onPause: () => void;
   onReveal: (id: string) => void;
 };
 
@@ -12,17 +15,13 @@ export function BlindRecordingCard({
   recording,
   versionNumber,
   isRevealed,
+  isActive,
+  onPlay,
+  onPause,
   onReveal,
 }: BlindRecordingCardProps) {
   return (
-    <section
-      style={{
-        border: '1px solid #ccc',
-        borderRadius: '8px',
-        padding: '1rem',
-        marginBottom: '1.5rem',
-      }}
-    >
+    <section>
       <h2>Version {versionNumber}</h2>
 
       {!isRevealed ? (
@@ -30,6 +29,9 @@ export function BlindRecordingCard({
           <BlindYouTubePlayer
             videoId={recording.videoId}
             versionNumber={versionNumber}
+            isActive={isActive}
+            onPlay={onPlay}
+            onPause={onPause}
           />
 
           <button onClick={() => onReveal(recording.id)}>

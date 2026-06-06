@@ -4,14 +4,14 @@ export const mockRecordings: Recording[] = [
     {
       id: '1',
       ariaTitle: 'Casta Diva',
-      videoId: 'Jx5fJZB93yU',
+      videoId: 'PXWiQlXWCIY',
       performer: 'Performer A',
       year: '1958',
     },
     {
       id: '2',
       ariaTitle: 'Casta Diva',
-      videoId: 'Vf42IP__ipw',
+      videoId: 'Rg4L5tcxFcA',
       performer: 'Performer B',
       year: '1965',
     },
