@@ -1,4 +1,6 @@
-export const mockRecordings = [
+import type { Recording } from '../types/Recording';
+
+export const mockRecordings: Recording[] = [
     {
       id: '1',
       ariaTitle: 'Casta Diva',
