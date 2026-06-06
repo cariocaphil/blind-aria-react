@@ -1,35 +1,53 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import { mockRecordings } from './data/mockRecordings';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [query, setQuery] = useState('Casta Diva');
+  const [searched, setSearched] = useState(false);
+  const [revealedIds, setRevealedIds] = useState<string[]>([]);
+
+  const results = searched
+    ? mockRecordings.filter((recording) =>
+        recording.ariaTitle.toLowerCase().includes(query.toLowerCase())
+      )
+    : [];
+
+  function reveal(id: string) {
+    setRevealedIds((current) => [...current, id]);
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <main>
+      <h1>Blind Aria</h1>
 
-export default App
+      <input value={query} onChange={(e) => setQuery(e.target.value)} />
+      <button onClick={() => setSearched(true)}>Search</button>
+
+      {results.map((recording, index) => {
+        const isRevealed = revealedIds.includes(recording.id);
+
+        return (
+          <section key={recording.id}>
+            <h2>Version {index + 1}</h2>
+
+            <iframe
+              width="560"
+              height="315"
+              src={`https://www.youtube.com/embed/${recording.videoId}`}
+              allow="autoplay; encrypted-media; picture-in-picture"
+              allowFullScreen
+            />
+
+            {isRevealed ? (
+              <p>
+                {recording.performer}, {recording.year}
+              </p>
+            ) : (
+              <button onClick={() => reveal(recording.id)}>Reveal</button>
+            )}
+          </section>
+        );
+      })}
+    </main>
+  );
+}
