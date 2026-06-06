@@ -9,11 +9,18 @@ export function SearchPage() {
   const [query, setQuery] = useState('Casta Diva');
   const [results, setResults] = useState<Recording[]>([]);
   const [revealedIds, setRevealedIds] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleSearch() {
-    const foundRecordings = await searchRecordings(query);
-    setResults(foundRecordings);
-    setRevealedIds([]);
+    setIsLoading(true);
+  
+    try {
+      const foundRecordings = await searchRecordings(query);
+      setResults(foundRecordings);
+      setRevealedIds([]);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   function reveal(id: string) {
