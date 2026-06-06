@@ -5,7 +5,13 @@ import type { Recording } from '../types/Recording';
 
 const SEARCH_API_URL = import.meta.env.VITE_SEARCH_API_URL;
 
-export async function searchRecordings(query: string): Promise<Recording[]> {
+export type SearchRecordingsResponse = {
+  recordings: Recording[];
+};
+
+export async function searchRecordings(
+  query: string
+): Promise<SearchRecordingsResponse> {
   if (!SEARCH_API_URL) {
     return searchMockRecordings(query);
   }
@@ -19,15 +25,27 @@ export async function searchRecordings(query: string): Promise<Recording[]> {
       throw new Error('Search request failed');
     }
 
-    return await response.json();
+    const data = await response.json();
+
+    if (Array.isArray(data)) {
+      return {
+        recordings: data,
+      };
+    }
+
+    return data;
   } catch (error) {
     console.warn('Falling back to mock recordings:', error);
     return searchMockRecordings(query);
   }
 }
 
-function searchMockRecordings(query: string): Recording[] {
-  return mockRecordings.filter((recording) =>
+function searchMockRecordings(query: string): SearchRecordingsResponse {
+  const recordings = mockRecordings.filter((recording) =>
     recording.ariaTitle.toLowerCase().includes(query.toLowerCase())
   );
+
+  return {
+    recordings,
+  };
 }
