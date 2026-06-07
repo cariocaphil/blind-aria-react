@@ -128,3 +128,44 @@
   margin-top: 1rem;
   color: #f87171;
 }
+
+.search-plan-toggle {
+  margin-bottom: 1rem;
+}
+
+.search-plan-panel {
+  margin-bottom: 2rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid #333;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.search-plan-panel h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.search-plan-section {
+  margin-bottom: 1rem;
+}
+
+.search-plan-section:last-child {
+  margin-bottom: 0;
+}
+
+.search-plan-label {
+  margin: 0 0 0.35rem;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.search-plan-list {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.search-plan-list li {
+  margin-bottom: 0.25rem;
+}

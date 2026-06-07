@@ -1,11 +1,14 @@
 import { useState } from 'react';
 
 import type { Recording } from '../../types/Recording';
-import { generatePlaylist } from './searchAgentApi';
+import { generatePlaylist, type SearchPlan } from './searchAgentApi';
 import '../../App.css';
 
 type SearchAgentPanelProps = {
-  onRecordingsGenerated: (recordings: Recording[]) => void;
+  onRecordingsGenerated: (payload: {
+    recordings: Recording[];
+    searchPlan?: SearchPlan;
+  }) => void;
 };
 
 export function SearchAgentPanel({
@@ -29,7 +32,10 @@ export function SearchAgentPanel({
         count,
       });
 
-      onRecordingsGenerated(response.recordings);
+      onRecordingsGenerated({
+        recordings: response.recordings,
+        searchPlan: response.searchPlan,
+      });
     } catch {
       setError('Failed to generate playlist. Please try again.');
     } finally {
@@ -49,7 +55,7 @@ export function SearchAgentPanel({
         className="search-agent-prompt"
         value={prompt}
         onChange={(event) => setPrompt(event.target.value)}
-        placeholder="Find 5 versions of Vissi d'arte"
+        placeholder="Find 5 recent recordings of Vissi d'arte. Or: give me a verismo aria in historical recordings"
         rows={3}
         disabled={isLoading}
       />

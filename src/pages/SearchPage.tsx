@@ -4,8 +4,10 @@ import { useState } from 'react';
 import type { Recording } from '../types/Recording';
 import { searchRecordings } from '../services/searchService';
 import { SearchAgentPanel } from '../agents/searchAgent/SearchAgentPanel';
+import { SearchPlanPanel } from '../agents/searchAgent/SearchPlanPanel';
 import { BlindRecordingCard } from '../components/BlindRecordingCard';
 import { createSession } from '../services/sessionService';
+import type { SearchPlan } from '../agents/searchAgent/searchAgentApi';
 import { useNavigate } from 'react-router-dom';
 import '../App.css';
 
@@ -19,6 +21,8 @@ export function SearchPage() {
   const [activeRecordingId, setActiveRecordingId] = useState<string | null>(
     null
   );
+  const [searchPlan, setSearchPlan] = useState<SearchPlan | null>(null);
+  const [isSearchPlanVisible, setIsSearchPlanVisible] = useState(false);
   const navigate = useNavigate();
 
   async function handleSearch() {
@@ -30,6 +34,8 @@ export function SearchPage() {
       setResults(searchResponse.recordings);
       setRevealedIds([]);
       setActiveRecordingId(null);
+      setSearchPlan(null);
+      setIsSearchPlanVisible(false);
     } finally {
       setIsLoading(false);
     }
@@ -55,11 +61,16 @@ export function SearchPage() {
     );
   }
 
-  function handleRecordingsGenerated(recordings: Recording[]) {
-    setResults(recordings);
+  function handleRecordingsGenerated(payload: {
+    recordings: Recording[];
+    searchPlan?: SearchPlan;
+  }) {
+    setResults(payload.recordings);
     setRevealedIds([]);
     setActiveRecordingId(null);
     setSessionLink(null);
+    setSearchPlan(payload.searchPlan ?? null);
+    setIsSearchPlanVisible(false);
   }
 
   return (
@@ -94,6 +105,21 @@ export function SearchPage() {
             </p>
           )}
         </div>
+      )}
+
+      {searchPlan && (
+        <div className="search-plan-toggle">
+          <button
+            type="button"
+            onClick={() => setIsSearchPlanVisible((visible) => !visible)}
+          >
+            {isSearchPlanVisible ? 'Hide search plan' : 'Show search plan'}
+          </button>
+        </div>
+      )}
+
+      {searchPlan && isSearchPlanVisible && (
+        <SearchPlanPanel searchPlan={searchPlan} />
       )}
 
       {results.map((recording, index) => (
