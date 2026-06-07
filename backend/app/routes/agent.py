@@ -20,7 +20,12 @@ async def generate_playlist(request: GeneratePlaylistRequest):
         count=request.count,
     )
 
-    return {
+    response = {
         "comparisonTarget": result["comparisonTarget"],
         "recordings": result["recordings"],
     }
+
+    if "searchPlan" in result:
+        response["searchPlan"] = result["searchPlan"]
+
+    return response
