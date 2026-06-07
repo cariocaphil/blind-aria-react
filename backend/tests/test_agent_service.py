@@ -104,13 +104,14 @@ class TestCreateSearchPlan:
 
 
 class TestFilterExcludedRecordings:
-    def _make_candidate(self, video_id: str, performer: str) -> dict:
+    def _make_candidate(self, video_id: str, performer: str, **extra: str) -> dict:
         return {
             "id": video_id,
             "ariaTitle": "Vissi d'arte",
             "videoId": video_id,
             "performer": performer,
             "year": "unknown",
+            **extra,
         }
 
     def test_removes_recordings_matching_exclude_terms(self):
@@ -127,15 +128,38 @@ class TestFilterExcludedRecordings:
         assert len(filtered) == 1
         assert filtered[0]["videoId"] == "vid-2"
 
+    def test_uses_enriched_performer_metadata_for_exclusion(self):
+        # Arrange
+        recordings = [
+            self._make_candidate(
+                "vid-1",
+                "Maria Callas",
+                sourceTitle="Maria Callas - Vissi d'arte (1954)",
+            ),
+            self._make_candidate(
+                "vid-2",
+                "Angela Gheorghiu",
+                sourceTitle="Angela Gheorghiu - Vissi d'arte",
+            ),
+        ]
+
+        # Act
+        filtered = filter_excluded_recordings(recordings, ["Callas"])
+
+        # Assert
+        assert len(filtered) == 1
+        assert filtered[0]["performer"] == "Angela Gheorghiu"
+
 
 class TestRankByPreferredTerms:
-    def _make_candidate(self, video_id: str, performer: str) -> dict:
+    def _make_candidate(self, video_id: str, performer: str, **extra: str) -> dict:
         return {
             "id": video_id,
             "ariaTitle": "Vissi d'arte",
             "videoId": video_id,
             "performer": performer,
             "year": "unknown",
+            **extra,
         }
 
     def test_prefers_matching_recordings_first(self):
@@ -152,6 +176,52 @@ class TestRankByPreferredTerms:
         # Assert
         assert ranked[0]["videoId"] == "vid-2"
         assert [recording["videoId"] for recording in ranked[1:]] == ["vid-1", "vid-3"]
+
+    def test_prefers_enriched_year_and_decade_metadata(self):
+        # Arrange
+        recordings = [
+            self._make_candidate(
+                "vid-1",
+                "Modern Singer",
+                year="2019",
+                decade="2010s",
+                recordingType="studio",
+            ),
+            self._make_candidate(
+                "vid-2",
+                "Historical Singer",
+                year="1954",
+                decade="1950s",
+                recordingType="live",
+            ),
+        ]
+
+        # Act
+        ranked = rank_by_preferred_terms(recordings, ["1950", "historical"])
+
+        # Assert
+        assert ranked[0]["videoId"] == "vid-2"
+
+    def test_prefers_live_recording_type_metadata(self):
+        # Arrange
+        recordings = [
+            self._make_candidate(
+                "vid-1",
+                "Studio Singer",
+                recordingType="studio",
+            ),
+            self._make_candidate(
+                "vid-2",
+                "Live Singer",
+                recordingType="live",
+            ),
+        ]
+
+        # Act
+        ranked = rank_by_preferred_terms(recordings, ["live"])
+
+        # Assert
+        assert ranked[0]["videoId"] == "vid-2"
 
 
 class TestSelectRecordings:
