@@ -210,3 +210,48 @@ class TestGeneratePlaylistEndpoint:
         recordings = data["recordings"]
         video_ids = [recording["videoId"] for recording in recordings]
         assert len(video_ids) == len(set(video_ids))
+
+    @patch(
+        "app.services.agent_service.search_youtube_recordings",
+        new_callable=AsyncMock,
+    )
+    def test_filters_excluded_performers_from_results(
+        self,
+        mock_search,
+        client,
+    ):
+        # Arrange
+        mock_search.return_value = [
+            {
+                "id": "vid-1",
+                "ariaTitle": "Vissi d'arte",
+                "videoId": "vid-1",
+                "performer": "Maria Callas - Vissi d'arte",
+                "year": "unknown",
+            },
+            {
+                "id": "vid-2",
+                "ariaTitle": "Vissi d'arte",
+                "videoId": "vid-2",
+                "performer": "Angela Gheorghiu - Vissi d'arte",
+                "year": "unknown",
+            },
+        ]
+
+        # Act
+        response = client.post(
+            "/api/agent/generate-playlist",
+            json={
+                "prompt": "Give me Vissi d'arte, mostly old recordings, without Callas",
+                "count": 5,
+            },
+        )
+
+        # Assert
+        assert response.status_code == 200
+        data = response.json()
+        assert data["comparisonTarget"] == "Vissi d'arte"
+        assert_youtube_search_used_for_target(mock_search, "Vissi d'arte")
+        performers = [recording["performer"] for recording in data["recordings"]]
+        assert all("callas" not in performer.lower() for performer in performers)
+        assert any("Gheorghiu" in performer for performer in performers)
