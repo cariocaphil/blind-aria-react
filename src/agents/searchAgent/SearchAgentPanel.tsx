@@ -42,6 +42,7 @@ export function SearchAgentPanel({
       <h2>Search Agent</h2>
       <p className="search-agent-description">
         Describe a comparison playlist in natural language.
+        The agent will choose a work (or use the one you specify) and generate multiple recordings for blind comparison.
       </p>
 
       <textarea
