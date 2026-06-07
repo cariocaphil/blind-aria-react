@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import type { Recording } from '../types/Recording';
 import { searchRecordings } from '../services/searchService';
+import { SearchAgentPanel } from '../agents/searchAgent/SearchAgentPanel';
 import { BlindRecordingCard } from '../components/BlindRecordingCard';
 import { createSession } from '../services/sessionService';
 import { useNavigate } from 'react-router-dom';
@@ -54,9 +55,18 @@ export function SearchPage() {
     );
   }
 
+  function handleRecordingsGenerated(recordings: Recording[]) {
+    setResults(recordings);
+    setRevealedIds([]);
+    setActiveRecordingId(null);
+    setSessionLink(null);
+  }
+
   return (
     <main className="app-container">
       <h1>Blind Aria</h1>
+
+      <SearchAgentPanel onRecordingsGenerated={handleRecordingsGenerated} />
 
       <div className="search-controls">
         <input

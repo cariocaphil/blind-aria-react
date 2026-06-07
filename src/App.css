@@ -84,3 +84,47 @@
   justify-content: center;
   margin-bottom: 3rem;
 }
+
+.search-agent-panel {
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #333;
+}
+
+.search-agent-panel h2 {
+  margin-bottom: 0.5rem;
+}
+
+.search-agent-description {
+  margin-bottom: 1rem;
+  color: #888;
+}
+
+.search-agent-prompt {
+  width: 100%;
+  max-width: 560px;
+  min-height: 80px;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  font-family: inherit;
+  font-size: 1rem;
+  resize: vertical;
+}
+
+.search-agent-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.search-agent-count {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-agent-error {
+  margin-top: 1rem;
+  color: #f87171;
+}
