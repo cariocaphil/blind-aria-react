@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from app.routes.agent import router as agent_router
 from app.services.session_service import create_session, get_session
 from app.services.youtube_service import search_youtube_recordings
 
@@ -23,6 +24,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(agent_router, prefix="/api/agent")
 
 
 @app.get("/")
