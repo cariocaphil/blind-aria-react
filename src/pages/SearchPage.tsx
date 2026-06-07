@@ -5,6 +5,8 @@ import type { Recording } from '../types/Recording';
 import { searchRecordings } from '../services/searchService';
 import { BlindRecordingCard } from '../components/BlindRecordingCard';
 import { createSession } from '../services/sessionService';
+import { useNavigate } from 'react-router-dom';
+import '../App.css';
 
 export function SearchPage() {
   const [query, setQuery] = useState('Casta Diva');
@@ -16,6 +18,7 @@ export function SearchPage() {
   const [activeRecordingId, setActiveRecordingId] = useState<string | null>(
     null
   );
+  const navigate = useNavigate();
 
   async function handleSearch() {
     setIsLoading(true);
@@ -33,15 +36,13 @@ export function SearchPage() {
 
   async function handleCreateSession() {
     if (results.length === 0) return;
-
+  
     setIsCreatingSession(true);
-
+  
     try {
       const response = await createSession(query, results);
-      const link = `${window.location.origin}/session/${response.sessionId}`;
-
-      setSessionLink(link);
-      await navigator.clipboard.writeText(link);
+  
+      navigate(`/session/${response.sessionId}`);
     } finally {
       setIsCreatingSession(false);
     }
@@ -54,10 +55,10 @@ export function SearchPage() {
   }
 
   return (
-    <main>
+    <main className="app-container">
       <h1>Blind Aria</h1>
 
-      <div>
+      <div className="search-controls">
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
@@ -69,7 +70,7 @@ export function SearchPage() {
       </div>
 
       {results.length > 0 && (
-        <div>
+        <div className="session-actions">
           <button onClick={handleCreateSession} disabled={isCreatingSession}>
             {isCreatingSession ? 'Creating session...' : 'Create shared session'}
           </button>

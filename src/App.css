@@ -40,3 +40,47 @@
 .read-the-docs {
   color: #888;
 }
+
+.app-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+.reveal-button {
+  margin-top: 0.5rem;
+}
+
+.recording-card {
+  margin: 3rem 0;
+  text-align: center;
+}
+
+.recording-controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.recording-card button {
+  min-width: 140px;
+}
+
+.search-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.search-controls input {
+  min-width: 280px;
+}
+
+.session-actions {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
