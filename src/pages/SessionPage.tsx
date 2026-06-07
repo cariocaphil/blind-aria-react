@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { BlindRecordingCard } from '../components/BlindRecordingCard';
 import { getSession } from '../services/sessionService';
@@ -42,9 +42,17 @@ export default function SessionPage() {
 
   return (
     <main>
-      <h1>{session.ariaQuery}</h1>
+      <h1>Blind Comparison</h1>
+
+      <h2>{session.ariaQuery}</h2>
 
       <SessionPresence sessionId={session.id} />
+
+      <p>
+      {session.recordings.length} anonymous recordings
+      </p>
+
+      <Link to="/">Create another session / Back to search page</Link>
 
       {session.recordings.map((recording, index) => (
         <BlindRecordingCard
