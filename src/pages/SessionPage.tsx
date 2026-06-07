@@ -5,6 +5,7 @@ import { BlindRecordingCard } from '../components/BlindRecordingCard';
 import { getSession } from '../services/sessionService';
 import type { Recording } from '../types/Recording';
 import { SessionPresence } from '../components/SessionPresence';
+import '../App.css';
 
 type Session = {
   id: string;
@@ -41,7 +42,7 @@ export default function SessionPage() {
   }
 
   return (
-    <main>
+    <main className="app-container">
       <h1>Blind Comparison</h1>
 
       <h2>{session.ariaQuery}</h2>

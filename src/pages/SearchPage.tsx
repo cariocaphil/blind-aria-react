@@ -6,6 +6,7 @@ import { searchRecordings } from '../services/searchService';
 import { BlindRecordingCard } from '../components/BlindRecordingCard';
 import { createSession } from '../services/sessionService';
 import { useNavigate } from 'react-router-dom';
+import '../App.css';
 
 export function SearchPage() {
   const [query, setQuery] = useState('Casta Diva');
@@ -54,10 +55,10 @@ export function SearchPage() {
   }
 
   return (
-    <main>
+    <main className="app-container">
       <h1>Blind Aria</h1>
 
-      <div>
+      <div className="search-controls">
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
@@ -69,7 +70,7 @@ export function SearchPage() {
       </div>
 
       {results.length > 0 && (
-        <div>
+        <div className="session-actions">
           <button onClick={handleCreateSession} disabled={isCreatingSession}>
             {isCreatingSession ? 'Creating session...' : 'Create shared session'}
           </button>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import '../App.css';
 
 type BlindYouTubePlayerProps = {
   videoId: string;
@@ -105,14 +106,15 @@ export function BlindYouTubePlayer({
           position: 'absolute',
         }}
       />
+      <div className="recording-controls">
+        <button onClick={handlePlay} disabled={!isReady || isActive}>
+         Play blind
+        </button>
 
-      <button onClick={handlePlay} disabled={!isReady || isActive}>
-        Play blind
-      </button>
-
-      <button onClick={handlePause} disabled={!isReady || !isActive}>
-        Pause
-      </button>
+        <button onClick={handlePause} disabled={!isReady || !isActive}>
+          Pause
+        </button>
+      </div>
     </div>
   );
 }
