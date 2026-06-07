@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { BlindRecordingCard } from '../components/BlindRecordingCard';
 import { getSession } from '../services/sessionService';
 import type { Recording } from '../types/Recording';
+import { SessionPresence } from '../components/SessionPresence';
 
 type Session = {
   id: string;
@@ -42,6 +43,8 @@ export default function SessionPage() {
   return (
     <main>
       <h1>{session.ariaQuery}</h1>
+
+      <SessionPresence sessionId={session.id} />
 
       {session.recordings.map((recording, index) => (
         <BlindRecordingCard
