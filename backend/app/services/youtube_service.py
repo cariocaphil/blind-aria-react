@@ -7,6 +7,8 @@ import httpx
 import isodate
 from dotenv import load_dotenv
 
+from app.services.recording_metadata import enrich_recording_metadata
+
 load_dotenv()
 
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
@@ -105,6 +107,9 @@ async def verify_youtube_recordings(candidates):
 
         verified_by_id[video_id] = {
             "title": html.unescape(snippet.get("title", "")),
+            "description": html.unescape(snippet.get("description", "")),
+            "publishedAt": snippet.get("publishedAt", ""),
+            "channelTitle": html.unescape(snippet.get("channelTitle", "")),
             "durationSeconds": duration_seconds,
         }
 
@@ -116,7 +121,17 @@ async def verify_youtube_recordings(candidates):
         if video_id not in verified_by_id:
             continue
 
-        verified_recordings.append(candidate)
+        metadata = verified_by_id[video_id]
+        verified_recordings.append(
+            enrich_recording_metadata(
+                video_id=video_id,
+                aria_title=candidate["ariaTitle"],
+                source_title=metadata["title"],
+                source_description=metadata["description"],
+                published_at=metadata["publishedAt"],
+                channel_title=metadata["channelTitle"],
+            )
+        )
 
     return verified_recordings
 

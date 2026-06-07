@@ -198,11 +198,19 @@ def recording_searchable_text(recording: dict) -> str:
             recording.get("performer", ""),
             recording.get("ariaTitle", ""),
             recording.get("year", ""),
+            recording.get("decade", ""),
+            recording.get("recordingType", ""),
+            recording.get("sourceTitle", ""),
         ]
     ).lower()
 
 
 def recording_matches_excluded_terms(recording: dict, exclude_terms: list[str]) -> bool:
+    performer = recording.get("performer", "").lower()
+
+    if any(term.lower() in performer for term in exclude_terms):
+        return True
+
     searchable_text = recording_searchable_text(recording)
     return any(term.lower() in searchable_text for term in exclude_terms)
 
@@ -227,6 +235,23 @@ def recording_matches_preferred_terms(
 ) -> bool:
     if not prefer_terms:
         return False
+
+    recording_type = recording.get("recordingType", "unknown").lower()
+    year = recording.get("year", "unknown")
+    decade = recording.get("decade", "unknown")
+
+    for term in prefer_terms:
+        normalized_term = term.lower()
+
+        if normalized_term in {"live", "studio"} and recording_type == normalized_term:
+            return True
+
+        if normalized_term.isdigit() and len(normalized_term) == 4:
+            if year == normalized_term or decade.startswith(normalized_term[:3]):
+                return True
+
+        if normalized_term.endswith("0s") and decade == normalized_term:
+            return True
 
     searchable_text = recording_searchable_text(recording)
     return any(term.lower() in searchable_text for term in prefer_terms)
